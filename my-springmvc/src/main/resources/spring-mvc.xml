@@ -1,0 +1,35 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:cache="http://www.springframework.org/schema/cache" 
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/cache 
+	   http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+	
+	<!-- 使用默认的注解映射 -->
+	<mvc:annotation-driven> 
+		<!-- 默认是jackson处理json,性能比gson高 
+		<mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.GsonHttpMessageConverter"/>
+        </mvc:message-converters>
+        -->
+    </mvc:annotation-driven>
+	
+	<!-- 把标记了@Controller注解的类转换为bean -->
+	<!-- <context:component-scan base-package="com.zte.html5.frame.selectemployee,com.zte.html5.sysman,com.test.account,com.test.student,com.test.position,com.test.googleworldmap" /> -->
+	<context:component-scan base-package="com.zte" />
+	
+
+</beans>

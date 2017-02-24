@@ -2,7 +2,88 @@
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-
+	
+	
 	<display-name>Archetype Created Web Application</display-name>
+	
+	<!--
+		ContextLoaderListener监听器的作用就是启动Web容器时，自动装配ApplicationContext的配置信息。
+		因为它实现了ServletContextListener这个接口，在web.xml配置这个监听器，启动容器时，就会默认执行它实现的方法。 
+		
+		至于ApplicationContext.xml这个配置文件部署在哪，如何配置多个xml文件，在ContextLoaderListener中关联了ContextLoader这个类，所以整个加载配置过程由ContextLoader来完成。看看它的API说明。
+		第一段说明ContextLoader可以由 ContextLoaderListener和ContextLoaderServlet生成。如果查看ContextLoaderServlet的API，可以看到它也关联了ContextLoader这个类而且它实现了HttpServlet这个接口。
+		第二段，ContextLoader创建的是 XmlWebApplicationContext这样一个类，它实现的接口是WebApplicationContext->ConfigurableWebApplicationContext->ApplicationContext->BeanFactory这样一来spring中的所有bean都由这个类来创建
+		第三段,讲如何部署applicationContext的xml文件。
+		如果在web.xml中不写任何参数配置信息，默认的路径是/WEB-INF/applicationContext.xml，在WEB-INF目录下创建的xml文件的名称必须是applicationContext.xml；
+		如果是要自定义文件名可以在web.xml里加入contextConfigLocation这个context参数：
+		<context-param>  
+	        <param-name>contextConfigLocation</param-name>  
+	        <param-value>  
+	            /WEB-INF/classes/applicationContext-*.xml   
+	        </param-value>  
+	    </context-param>  
+	-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:spring-config.xml</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
 
+	<!-- 配置 DispatcherServlet -->
+	<!-- 配置 DispatcherServlet 的一个初始化参数: 配置 SpringMVC 配置文件的位置和名称 -->
+	<!-- 
+		实际上也可以不通过 contextConfigLocation 来配置 SpringMVC 的配置文件, 而使用默认的.
+		默认的配置文件为: /WEB-INF/<servlet-name>-servlet.xml
+		
+		DispatcherServlet主要用作职责调度工作，本身主要用于控制流程，主要职责如下：
+		1、文件上传解析，如果请求类型是multipart将通过MultipartResolver进行文件上传解析；
+		2、通过HandlerMapping，将请求映射到处理器（返回一个HandlerExecutionChain，它包括一个处理器、多个HandlerInterceptor拦截器）；
+		3、  通过HandlerAdapter支持多种类型的处理器(HandlerExecutionChain中的处理器)；
+		4、通过ViewResolver解析逻辑视图名到具体视图实现；
+		5、本地化解析；
+		6、渲染具体的视图等；
+		7、如果执行过程中遇到异常将交给HandlerExceptionResolver来解析。
+		从以上我们可以看出DispatcherServlet主要负责流程的控制（而且在流程中的每个关键点都是很容易扩展的）。
+	-->
+	<servlet>
+		<servlet-name>dispatcherServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring-mvc.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+		<!-- 为servlet或者filter设置启用异步支持 -->
+		<async-supported>true</async-supported>
+	</servlet>
+	
+	<servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <url-pattern>*.serv</url-pattern>
+    </servlet-mapping>
+
+
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
 </web-app>

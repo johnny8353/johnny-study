@@ -18,7 +18,7 @@
 		<module>my-springmvc</module>
 		<module>my-test</module>
 		<module>my-ui</module>
-		
+		<module>my-frame</module>
 	</modules>
 
 </project>
