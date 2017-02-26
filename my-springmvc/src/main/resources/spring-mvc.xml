@@ -4,6 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:cache="http://www.springframework.org/schema/cache" 
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans
@@ -14,11 +15,21 @@
        http://www.springframework.org/schema/mvc/spring-mvc.xsd
        http://www.springframework.org/schema/util
        http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/aop 
+	   http://www.springframework.org/schema/aop/spring-aop.xsd
        http://www.springframework.org/schema/cache 
 	   http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 	
-	<!-- 使用默认的注解映射 -->
+	<!-- 
+	• <mvc:annotation-driven /> 会自动注册RequestMappingHandlerMapping、RequestMappingHandlerAdapter 与ExceptionHandlerExceptionResolver 三个bean。
+	• 还将提供以下支持：
+	– 支持使用 ConversionService 实例对表单参数进行类型转换
+	– 支持使用 @NumberFormat annotation、@DateTimeFormat注解完成数据类型的格式化
+	– 支持使用 @Valid 注解对 JavaBean 实例进行 JSR 303 验证
+	– 支持使用 @RequestBody 和 @ResponseBody 注解
+	为何配置了<mvc:default-servlethandler/>和<mvc:view-controller/>后RuqeustMapping不可用？配置了<mvc:annotation-driven />解决了这些问题呢？
+	 -->
 	<mvc:annotation-driven> 
 		<!-- 默认是jackson处理json,性能比gson高 
 		<mvc:message-converters>
@@ -28,8 +39,13 @@
     </mvc:annotation-driven>
 	
 	<!-- 把标记了@Controller注解的类转换为bean -->
-	<!-- <context:component-scan base-package="com.zte.html5.frame.selectemployee,com.zte.html5.sysman,com.test.account,com.test.student,com.test.position,com.test.googleworldmap" /> -->
-	<context:component-scan base-package="com.zte" />
+	<context:component-scan base-package="com.zte" use-default-filters="false">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
 	
+
 
 </beans>

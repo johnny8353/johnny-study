@@ -1,2 +1,0 @@
-# johnny-study
-study spring

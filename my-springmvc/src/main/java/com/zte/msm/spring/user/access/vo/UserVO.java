@@ -173,4 +173,16 @@ public class UserVO {
     public void setOrgId(BigDecimal orgId) {
         this.orgId = orgId;
     }
+
+	@Override
+	public String toString() {
+		return "UserVO [id=" + id + ", name=" + name + ", account=" + account + ", pwd=" + pwd + ", token=" + token
+				+ ", enckey=" + enckey + ", enciv=" + enciv + ", effectiveDate=" + effectiveDate + ", expirationDate="
+				+ expirationDate + ", email=" + email + ", mobileNo=" + mobileNo + ", createdBy=" + createdBy
+				+ ", createdDate=" + createdDate + ", lastUpdatedBy=" + lastUpdatedBy + ", lastUpdatedDate="
+				+ lastUpdatedDate + ", enableFlag=" + enableFlag + ", orgId=" + orgId + "]";
+	}
+	
+    
+    
 }

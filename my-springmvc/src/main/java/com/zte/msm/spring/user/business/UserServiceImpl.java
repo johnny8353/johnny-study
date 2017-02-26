@@ -10,7 +10,10 @@ import com.zte.msm.spring.user.model.UserBO;
 @Service
 public class UserServiceImpl implements UserService
 {
-
+	public UserServiceImpl() {
+		// TODO Auto-generated constructor stub
+		System.out.println("UserServiceImpl...");
+	}
 	@Override
 	public UserBO get(Long id) throws Exception {
 		// TODO Auto-generated method stub

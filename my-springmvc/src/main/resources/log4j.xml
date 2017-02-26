@@ -2,8 +2,7 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 	<!-- 控制台日志，编码阶段使用 -->
-	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender"
-		additivity="false">
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
 		<param name="Target" value="System.out" />
 		<param name="Threshold" value="DEBUG" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -12,17 +11,51 @@
 	</appender>
 
 	<!-- 控制台异步日志,开发环境使用，方便调试 -->
-	<appender name="ASYNC_CONSOLE" class="org.apache.log4j.AsyncAppender"
-		additivity="false">
+	<appender name="ASYNC_CONSOLE" class="org.apache.log4j.AsyncAppender">
 		<param name="BufferSize" value="64" />
 		<param name="LocationInfo" value="true" />
 		<appender-ref ref="CONSOLE" />
 	</appender>
 
-	<!-- JSSB框架底层日志，分析框架问题时使用 -->
-	<appender name="JSSB_LOG" class="org.apache.log4j.DailyRollingFileAppender"
-		additivity="false">
-		<param name="File" value="jssb.log" />
+	<!-- 框架底层日志，分析框架问题时使用 -->
+	<appender name="MSM_FRAME_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="c:\\logs\\msm-frame.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %l%n%p: %m%n" />
+		</layout>
+	</appender>
+	
+	<!-- 框架底层日志，分析框架问题时使用 -->
+	<appender name="FRAME_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="c:\\logs\\frame.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %l%n%p: %m%n" />
+		</layout>
+	</appender>
+
+	<!-- 业务日志，生产环境使用 -->
+	<appender name="BUSINESS_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="c:\\logs\\msm-monitor.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %l%n%p: %m%n" />
+		</layout>
+	</appender>
+	<appender name="MONITOR_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="c:\\logs\\msm-monitor.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %l%n%p: %m%n" />
+		</layout>
+	</appender>
+	<appender name="SPRINGBOOT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="c:\\logs\\msm-springboot.log" />
 		<param name="Append" value="true" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -31,36 +64,21 @@
 	</appender>
 
 	<!-- 异步JSSB框架底层日志，生产环境使用 -->
-	<appender name="ASYNC_JSSB_LOG" class="org.apache.log4j.AsyncAppender"
-		additivity="false">
+	<appender name="ASYNC_FRAME_LOG" class="org.apache.log4j.AsyncAppender">
 		<param name="BufferSize" value="512" />
 		<param name="LocationInfo" value="true" />
 		<appender-ref ref="JSSB_LOG" />
 	</appender>
-
-	<!-- 业务日志，生产环境使用 -->
-	<appender name="BUSINESS_LOG" class="org.apache.log4j.DailyRollingFileAppender"
-		additivity="false">
-		<param name="File" value="business.log" />
-		<param name="Append" value="true" />
-		<param name="DatePattern" value="'.'yyyy-MM-dd" />
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d %l%n%p: %m%n" />
-		</layout>
-	</appender>
-
 	<!-- 异步业务日志，生产环境使用 -->
-	<appender name="ASYNC_BUSINESS_LOG" class="org.apache.log4j.AsyncAppender"
-		additivity="false">
+	<appender name="ASYNC_BUSINESS_LOG" class="org.apache.log4j.AsyncAppender">
 		<param name="BufferSize" value="256" />
 		<param name="LocationInfo" value="true" />
 		<appender-ref ref="BUSINESS_LOG" />
 	</appender>
 
 	<!-- EHCACHE日志，生产环境使用 -->
-	<appender name="EHCAHE_LOG" class="org.apache.log4j.DailyRollingFileAppender"
-		additivity="false">
-		<param name="File" value="business.log" />
+	<appender name="EHCAHE_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="c:\\logs\\msm-business.log" />
 		<param name="Append" value="true" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -69,8 +87,7 @@
 	</appender>
 
 	<!-- 异步业务日志，生产环境使用 -->
-	<appender name="ASYNC_EHCAHE_LOG" class="org.apache.log4j.AsyncAppender"
-		additivity="false">
+	<appender name="ASYNC_EHCAHE_LOG" class="org.apache.log4j.AsyncAppender">
 		<param name="BufferSize" value="256" />
 		<param name="LocationInfo" value="true" />
 		<appender-ref ref="EHCAHE_LOG" />
@@ -79,51 +96,66 @@
 	<!-- 特定需要记录日志的包 -->
 	
 	<!-- 这个配置对性能影响很大，发版的时候一定要改成ERROR --> 
-	<category name="java.sql"> 
-		<priority value="DEBUG" /> 
-		<appender-ref ref="CONSOLE" /> 
-	</category> 
+	<logger name="java.sql" additivity="false"> 
+		<level value="DEBUG" /> 
+		<appender-ref ref="FRAME_LOG" /> 
+	</logger> 
 	
 	<!-- 这个配置对性能影响很大，发版的时候一定要改成ERROR --> 
-	<category name="com.zte">
-		<priority value="DEBUG" />
-		<appender-ref ref="CONSOLE" />
-	</category>
-	
+	<logger name="com.zte.msm.frame" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="MSM_FRAME_LOG"/>
+	</logger>
+	<logger name="com.zte.msm.spring" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="BUSINESS_LOG"/>
+	</logger>
+	<logger name="com.zte.msm.springboot" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="SPRINGBOOT_LOG"/>
+	</logger>
 	
 	<!-- ehcache -->
-	<category name="net.sf.ehcache">
-		<priority value="info" />
-		<appender-ref ref="CONSOLE" />
-	</category>
-
-	<category name="org.jgroups">
-		<priority value="DEBUG" />
-		<appender-ref ref="CONSOLE" />
-	</category>
-
-	<category name="org.springframework.cache">
-		<priority value="info" />
-		<appender-ref ref="CONSOLE" />
-	</category>
-	
-	<logger name="org.eclipse.jetty">
+	<logger name="net.sf.ehcache" additivity="false">
 		<level value="info" />
-	</logger>
-	<logger name="org.springframework">
-		<level value="info" />
+		<appender-ref ref="FRAME_LOG"/>
 	</logger>
 
-	<logger name="org.mybatis.spring">
-		<level value="info" />
-	</logger>
-	
-	<logger name="org.springframework.web">
+	<logger name="org.jgroups" additivity="false">
 		<level value="DEBUG" />
+		<appender-ref ref="FRAME_LOG"/>
 	</logger>
 
+	<logger name="org.springframework.cache" additivity="false">
+		<level value="info" />
+		<appender-ref ref="FRAME_LOG"/>
+	</logger>
+	
+	<logger name="org.eclipse.jetty" additivity="false">
+		<level value="info" />
+		<appender-ref ref="FRAME_LOG"/>
+	</logger>
+	<logger name="org.springframework" additivity="false">
+		<level value="info" />
+		<appender-ref ref="FRAME_LOG"/>
+	</logger>
+	<logger name="org.mybatis.spring" additivity="false">
+		<level value="info" />
+		<appender-ref ref="FRAME_LOG"/>
+	</logger>
+	<logger name="org.springframework.web" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="FRAME_LOG"/>
+	</logger>
+	<logger name="org" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="FRAME_LOG" />
+	</logger>
+	<logger name="com" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="FRAME_LOG" />
+	</logger>
 
-	<!-- 默认所有业务日志异步输出到文件business.log; 其他特殊框架性的日志输出到jssb.log -->
 	<root>
 		<priority value="DEBUG" />
 		<appender-ref ref="CONSOLE" />

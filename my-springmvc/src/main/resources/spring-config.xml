@@ -5,6 +5,7 @@
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:c="http://www.springframework.org/schema/c"
        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:cache="http://www.springframework.org/schema/cache"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd 
@@ -12,11 +13,24 @@
     http://www.springframework.org/schema/context/spring-context.xsd 
 	http://www.springframework.org/schema/tx 
 	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop.xsd
 	http://www.springframework.org/schema/cache 
 	http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-    <!-- spring注解驱动BEAN配置 -->
+    <!-- spring注解驱动BEAN配置,隐式地向Spring容器中注册AutowiredAnnotationBeanPostProcessor、
+    CommonAnnotationBeanPostProcessor、PersistenceAnnotationBeanPostProcessor 
+       及 RequiredAnnotationBeanPostProcessor 这 4 个 BeanPostProcessor。 -->
     <context:annotation-config/>
-    <context:component-scan base-package="com.zte"/>
-
+    
+    <!-- 自动扫描，context:component-scan加上后可以去掉context:annotation-config -->
+    <context:component-scan base-package="com.zte">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+	
+	<!-- AOP，Spring IOC 容器中启用 AspectJ 注解支持，proxy-target-class默认为false，只能使用JDK动态代理 
+	不过即使proxy-target-class设置为false，如果目标类没有声明接口，则spring将自动使用CGLib动态代理-->
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	
 </beans>
