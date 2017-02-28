@@ -8,11 +8,19 @@ import java.lang.annotation.Target;
 
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * 组合注解
+ * @author Administrator
+ *
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @EnableLog
 @ResponseBody
 public @interface EnableLogResponseBody {
-
+	/*
+	 * 说明
+	 */
+	String desc() default "无";  
 }

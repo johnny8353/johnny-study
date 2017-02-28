@@ -2,26 +2,37 @@ package com.zte.msm.frame.common;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.servlet.support.RequestContext;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zte.msm.frame.util.spring.SpringUtil;
+
 public class ServiceData {
 	RetCode code = RetCode.Success; // 操作结果
 
 	Object bo = null; // 返回的数据对象,在返回异常编码时,这个对象可设置详细的异常信息
 
 	Map other = null; // 附加数据
-
 	public RetCode getCode() {
 		return code;
 	}
 
-//	public void setCode(HttpServletRequest request, RetCode code) {
-//		this.code = code;
-//
-//		// 从后台代码获取国际化提示信息
-//		RequestContext requestContext = new RequestContext(request);
-//		this.code.setMsg(requestContext.getMessage(this.code.getMsgId()));
-//
-//	}
+	public void setCode(String codeMsg, RetCode code) {
+		this.code = code;
+		this.code.setMsg(codeMsg);
+	}
 
+	public void setCode(HttpServletRequest request, RetCode code) {
+		this.code = code;
+		
+		//从后台代码获取国际化提示信息            
+		RequestContext requestContext = new RequestContext(request);
+		this.code.setMsg( requestContext.getMessage(this.code.getMsgId()));
+
+	}
+	
 	public Object getBo() {
 		return bo;
 	}
@@ -49,8 +60,8 @@ public class ServiceData {
 	}
 
 	// 返回编码:包括操作成功、服务器异常、身份验证失败、权限验证失败、字段效验错误、业务模块异常等场景，
-	// 和前台的异常类型变量一一对应
-//	@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+	// 和前台的异常类型变量一一对应 
+	@JsonFormat(shape = JsonFormat.Shape.OBJECT)//枚举转为json格式输出
 	public enum RetCode {
 		Success("0000", "RetCode.Success"), 
 		ServerError("0001", "RetCode.ServerError"), 

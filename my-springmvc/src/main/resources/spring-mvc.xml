@@ -30,13 +30,15 @@
 	– 支持使用 @RequestBody 和 @ResponseBody 注解
 	为何配置了<mvc:default-servlethandler/>和<mvc:view-controller/>后RuqeustMapping不可用？配置了<mvc:annotation-driven />解决了这些问题呢？
 	 -->
-	<mvc:annotation-driven> 
+	<mvc:annotation-driven validator="validator"> 
 		<!-- 默认是jackson处理json,性能比gson高 
 		<mvc:message-converters>
             <bean class="org.springframework.http.converter.json.GsonHttpMessageConverter"/>
         </mvc:message-converters>
         -->
     </mvc:annotation-driven>
+    
+    <aop:aspectj-autoproxy proxy-target-class="true" />
 	
 	<!-- 把标记了@Controller注解的类转换为bean -->
 	<context:component-scan base-package="com.zte" use-default-filters="false">
@@ -46,6 +48,87 @@
 			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
 	
+	<!-- 自定义的多语言解析器 
+	国际化概述
+	• 默认情况下，SpringMVC 根据 Accept-Language 参数判断客户端的本地化类型。
+	• 当接受到请求时，SpringMVC 会在上下文中查找一个本地化解析器（LocalResolver），找到后使用它获取请求所对应的本地化类型信息。
+	• SpringMVC 还允许装配一个动态更改本地化类型的拦截器，这样通过指定一个请求参数就可以控制单个请求的本地化类型。
+	
+	本地化解析器和本地化拦截器
+	• AcceptHeaderLocaleResolver：根据 HTTP 请求头的Accept-Language 参数确定本地化类型，如果没有显式定义本地化解析器， SpringMVC 使用该解析器。
+	• CookieLocaleResolver：根据指定的 Cookie 值确定本地化类型
+	• SessionLocaleResolver：根据 Session 中特定的属性确定本地化类型
+	• LocaleChangeInterceptor：从请求参数中获取本次请求对应的本地化类型。
+		
+	-->
+	
+    <!-- 配置国际化资源文件 
+    ReloadableResourceBundleMessageSource加载时,默认使用DefaultResourceLoader,他会先判断资源path是否带有classpath:前缀,如果有,用ClassPathResource去加载资源文件,如果没有试着用文件协议的url去访问,再没有就在contextPath即WEB-INF下查找
+    -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<!-- 在web环境中一定要定位到classpath 否则默认到当前web应用下找  -->
+		<property name="basenames">
+            <list>
+                <!-- 在web环境中一定要定位到classpath 否则默认到当前web应用下找  -->
+                <value>messages/frame_messages</value>
+                <value>messages/user_messages</value>
+            </list>
+        </property>
+		<property name="defaultEncoding" value="UTF-8"/>
+		
+		<!-- 如果在国际化资源文件中找不到对应代码的信息，就用这个代码作为名称  -->               
+    	<!-- <property name="useCodeAsDefaultMessage" value="true" />  -->
+	</bean>
+	
+	<bean id="localeResolver" class="com.zte.msm.frame.i18n.HeaderLocaleResolver"></bean>
+    
+    <!-- 配置拦截器, 多个拦截器,顺序执行-->
+    <mvc:interceptors>
+    	<mvc:interceptor>  
+            <!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller-->
+            <mvc:mapping path="/**" />
+            <!-- 国际化操作拦截器 如果采用基于（请求/Session/Cookie）则必需配置-->
+            <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+        </mvc:interceptor>
+        <!-- 暂时使用localresolve解决 Locale 转换 问题，HttpRequestHeadInterceptor先不使用  -->
+    	<mvc:interceptor>  
+            <mvc:mapping path="/**" />
+            <bean class="com.zte.msm.frame.i18n.HttpRequestHeadInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 
+        <mvc:interceptor>  
+            <mvc:mapping path="/**" />
+            <bean class="com.zte.html5.frame.common.AuthInterceptor"></bean>  
+        </mvc:interceptor>
+         -->
+       <!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法-->
+    </mvc:interceptors>
+    
+    <!-- Json转换器配置  默认使用
+    <bean id="mappingJackson2HttpMessageConverter" 
+        class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">    
+        <property name="supportedMediaTypes">    
+            <list>    
+                <value>text/html;charset=UTF-8</value>    
+            </list>    
+        </property>    
+    </bean>     
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">    
+        <property name="messageConverters">    
+            <list>    
+                <ref bean="mappingJackson2HttpMessageConverter" />
+            </list>    
+        </property>    
+    </bean>
+	-->
 
-
+	<!-- 配置验证器 -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator"></property>
+		<!-- 指定校验使用的资源文件，如果不指定则默认使用classpath下的ValidationMessages.properties -->
+		<property name="validationMessageSource" ref="messageSource" />
+	</bean> 
+	
+	
 </beans>

@@ -4,7 +4,7 @@
 	<groupId>com.johnny.johnny-study</groupId>
 	<artifactId>my-springmvc</artifactId>
 	<version>1.0.0</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>my-springboot</name>
 	<url>http://maven.apache.org</url>
 

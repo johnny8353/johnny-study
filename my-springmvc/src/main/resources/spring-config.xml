@@ -31,6 +31,7 @@
 	
 	<!-- AOP，Spring IOC 容器中启用 AspectJ 注解支持，proxy-target-class默认为false，只能使用JDK动态代理 
 	不过即使proxy-target-class设置为false，如果目标类没有声明接口，则spring将自动使用CGLib动态代理-->
-	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<!-- 移到springmvc中 -->
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true"/> -->
 	
 </beans>

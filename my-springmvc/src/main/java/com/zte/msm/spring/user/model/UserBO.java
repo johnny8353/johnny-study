@@ -3,12 +3,16 @@ package com.zte.msm.spring.user.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.validation.constraints.Size;
 
-public class UserBO
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zte.msm.frame.base.BaseBO;
+
+public class UserBO extends BaseBO
 {
     private Long id;
-
+    
+    @Size(min=6,message="{userBO.name.Size}")    //字符
     private String name;
 
     private String account;

@@ -26,6 +26,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EnableLog {
-	String desc() default "";  
-    String operType() default "";
+	/*
+	 * 说明
+	 */
+	String desc() default "无";  
 }
