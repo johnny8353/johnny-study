@@ -1,7 +1,12 @@
 package com.zte.msm.frame.base;
 
 import java.io.Serializable;
-
-public class BaseBO  implements Serializable{
-
+import java.util.Date;
+/**
+ * 基础BO类
+ * @author JohnnyHuang黄福强
+ */
+public class BaseBO implements Serializable {
+	
+	
 }

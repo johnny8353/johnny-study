@@ -13,7 +13,10 @@ import org.springframework.web.servlet.support.RequestContext;
 import com.zte.msm.frame.common.ServiceData;
 import com.zte.msm.frame.exception.BusinessException;
 import com.zte.msm.frame.exception.ValidationException;
+import com.zte.msm.frame.log.EnableLog;
 import com.zte.msm.frame.log.LoggerFactory;
+import com.zte.msm.frame.util.json.JacksonUtil;
+import com.zte.msm.frame.util.string.StringUtil;
 
 /**
  * 基础控制类
@@ -26,6 +29,9 @@ public class BaseController {
 	// 日志对象
 	private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
+	/**
+	 * 注入ResourceBundleMessageSource，在Controller获取
+	 */
 	@Autowired
 	protected ResourceBundleMessageSource messageSource;
 	
@@ -35,8 +41,14 @@ public class BaseController {
 	protected ServiceData.RetCode VALIDATION_ERROR = ServiceData.RetCode.ValidationError;
 	protected ServiceData.RetCode BUSINESS_ERROR = ServiceData.RetCode.BusinessError;
 	protected ServiceData.RetCode SERVER_ERROR = ServiceData.RetCode.ServerError;
-
-	protected String getMessage(HttpServletRequest request, String key) {
+	
+	/**
+	 * 获取多语言
+	 * @param request
+	 * @param key
+	 * @return
+	 */
+	public String getMessage(HttpServletRequest request, String key) {
 		RequestContext requestContext = new RequestContext(request);
 		return messageSource.getMessage(key, null, requestContext.getLocale());
 	}
@@ -44,23 +56,11 @@ public class BaseController {
 	// 异常处理方法
 	@ResponseBody
 	@ExceptionHandler
-	public ServiceData exception(HttpServletRequest request, Exception e) {
+	@EnableLog("异常发生，记录该日志表示请求未达到方法就已经抛出。")
+	protected ServiceData exception(HttpServletRequest request, Exception e) throws Exception{
 		logger.error("捕获到异常：", e);
-		ServiceData ret = new ServiceData();
-		// 根据不同的异常类型进行不同处理
-		// 包括效验异常\业务异常\服务器异常等
-		if (e instanceof ValidationException) {
-			ret.setCode(request, VALIDATION_ERROR);
-			// ret.setBo(((ValidationException) e).getResult().getAllErrors());
-			ret.setBo(((ValidationException) e).getResultMap());
-		} else if (e instanceof BusinessException) {
-			ret.setCode(request, BUSINESS_ERROR);
-			ret.setBo(e);
-		} else {
-			ret.setCode(request, SERVER_ERROR);
-			ret.setBo(e.getMessage());
-		}
-
+		ServiceData ret = com.zte.msm.frame.exception.ExceptionHandler.handler(this, request, e);
+		logger.debug("捕获到异常-返回：{}", JacksonUtil.toJson(ret));
 		return ret;
 	}
 

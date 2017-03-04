@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:c="http://www.springframework.org/schema/c"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:cache="http://www.springframework.org/schema/cache"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd 
     http://www.springframework.org/schema/context 
     http://www.springframework.org/schema/context/spring-context.xsd 
@@ -18,20 +15,144 @@
 	http://www.springframework.org/schema/cache 
 	http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-    <!-- spring注解驱动BEAN配置,隐式地向Spring容器中注册AutowiredAnnotationBeanPostProcessor、
-    CommonAnnotationBeanPostProcessor、PersistenceAnnotationBeanPostProcessor 
-       及 RequiredAnnotationBeanPostProcessor 这 4 个 BeanPostProcessor。 -->
-    <context:annotation-config/>
-    
-    <!-- 自动扫描，context:component-scan加上后可以去掉context:annotation-config -->
-    <context:component-scan base-package="com.zte">
-		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	<!-- spring注解驱动BEAN配置,隐式地向Spring容器中注册AutowiredAnnotationBeanPostProcessor、 
+		CommonAnnotationBeanPostProcessor、PersistenceAnnotationBeanPostProcessor 
+		及 RequiredAnnotationBeanPostProcessor 这 4 个 BeanPostProcessor。 -->
+	<context:annotation-config />
+
+	<!-- 自动扫描，context:component-scan加上后可以去掉context:annotation-config -->
+	<context:component-scan base-package="com.zte">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
-	
+
 	<!-- AOP，Spring IOC 容器中启用 AspectJ 注解支持，proxy-target-class默认为false，只能使用JDK动态代理 
-	不过即使proxy-target-class设置为false，如果目标类没有声明接口，则spring将自动使用CGLib动态代理-->
+		不过即使proxy-target-class设置为false，如果目标类没有声明接口，则spring将自动使用CGLib动态代理 -->
 	<!-- 移到springmvc中 -->
 	<!-- <aop:aspectj-autoproxy proxy-target-class="true"/> -->
-	
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<context:property-placeholder location="classpath:application.properties"
+		ignore-unresolvable="true" />
+	<!-- 这种加载方式可以在代码中通过@Value注解进行注入, @Value("#{settings['db1.url']}") public 
+		String url; 可以将配置整体赋给Properties类型的类变量，也可以取出其中的一项赋值给String类型的类变量 -->
+	<!-- <util:properties/> 标签只能加载一个文件，当多个属性文件需要被加载的时候，可以使用多个该标签 -->
+	<!-- <util:properties id="remoteSettings" location="file:/opt/demo/config/demo-remote.properties" 
+		/> -->
+
+	<!-- <util:properties/> 标签的实现类是PropertiesFactoryBean， 直接使用该类的bean配置，设置其locations属性可以达到一个和上面一样加载多个配置文件的目的 -->
+	<bean id="settings"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:application.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="mainDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close">
+		<!-- <property name="driverClassName" value="${db1.driver}"/> -->
+		<property name="url" value="${db1.url}" />
+		<property name="username" value="${db1.username}" />
+		<property name="password" value="${db1.password}" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="100" />
+		<property name="maxWait" value="-1" />
+		<property name="maxIdle" value="100" />
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="select 1 from dual" />
+		<property name="validationQueryTimeout" value="1" />
+		<property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="1800" />
+		<property name="logAbandoned" value="true" />
+	</bean>
+
+	<!-- 配置多数据源,例如增加一个只读数据源用于读写分离 -->
+	<bean id="readOnlyDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close">
+		<!-- <property name="driverClassName" value="${db2.driver}"/> -->
+		<property name="url" value="${db2.url}" />
+		<property name="username" value="${db2.username}" />
+		<property name="password" value="${db2.password}" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="100" />
+		<property name="maxWait" value="-1" />
+		<property name="maxIdle" value="100" />
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="select 1 from dual" />
+		<property name="validationQueryTimeout" value="1" />
+		<property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="1800" />
+		<property name="logAbandoned" value="true" />
+	</bean>
+
+	<!-- 注解型事务管理器,第一个为缺省事务管理器 -->
+	<tx:annotation-driven />
+
+	<!-- 配置多数据源,例如增加一个只读数据源用于读写分离,对应增加一个事务管理器,可以在代码的事务注解中声明使用哪个事务管理器,例子如下 @Transactional(transactionManager="readOnlyTX",propagation=Propagation.NOT_SUPPORTED,readOnly=true) -->
+
+	<!-- transaction manager, use JtaTransactionManager for global tx -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="mainDataSource" />
+		<qualifier value="mainTX" />
+	</bean>
+
+	<bean id="readOnlyTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="readOnlyDataSource" />
+		<qualifier value="readOnlyTX" />
+	</bean>
+
+	<!-- 2. 配置事务属性, 需要事务管理器 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- [REQUIRED, REQUIRES_NEW,SUPPORTS, MANDATORY, NOT_SUPPORTED, NEVER, 
+				NESTED]' -->
+			<tx:method name="purchase" propagation="REQUIRED" />
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 3. 配置事务切入点, 以及把事务切入点和事务属性关联起来 -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.zte.msm.spring.user.business.*.*(..))"
+			id="txPointCut" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut" />
+	</aop:config>
+
+
+
+	<!-- mybatis配置 -->
+	<!-- 集成mybatis后,mybatis接管了事务管理器里面的连接创建工作.所以要配置多数据源,需要增加一个SqlSessionFactory和MapperScannerConfigurer, 
+		这样可以控制不同的程序包里面的DAO和不同的数据库绑定,同时也不需要在代码注解中指定不同的事务管理器了,因为数据库连接不再由事务管理器来管理. 这里需要制定一条开发规范:操作不同数据库的代码,所在包要独立,不能有嵌套 -->
+	<bean id="mainSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="mainDataSource" />
+		<property name="configLocation" value="classpath:mybatis.xml" />
+	</bean>
+
+	<bean id="readOnlySqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="readOnlyDataSource" />
+		<property name="configLocation" value="classpath:mybatis.xml" />
+	</bean>
+
+	<!-- 配置  sqlSession Bean 可以开启日志持久化功能，不配置不开启-->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="mainSqlSessionFactory" />
+	</bean>
+
+	<!-- scan for mybatis mappers and let them be autowired -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.zte.msm.**.access.dao" />
+		<property name="sqlSessionFactoryBeanName" value="mainSqlSessionFactory" />
+	</bean>
+	<!-- <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> <property 
+		name="basePackage" value="com.zte.msm.**.access.dao"/> <property name="sqlSessionFactoryBeanName" 
+		value="readOnlySqlSessionFactory"/> </bean> -->
 </beans>

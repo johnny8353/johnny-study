@@ -4,10 +4,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 public class MapUtil {
-	public static HashMap returnMap(Object pojo)
+	/**
+	 * 对象转为Map
+	 * @param pojo
+	 * @return
+	 */
+	public static HashMap<String,Object> toMap(Object pojo)
 	{
-		HashMap hashMap = new HashMap();
-
+		HashMap<String,Object> hashMap = new HashMap<String,Object>();
+		if(pojo==null) return hashMap;
 		// Class c = BaseObject.class;
 		Method m[] = pojo.getClass().getDeclaredMethods();
 		Field f[] = pojo.getClass().getDeclaredFields();

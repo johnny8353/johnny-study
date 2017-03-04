@@ -42,7 +42,7 @@ public class LovController extends BaseController
      */
     @RequestMapping(value = "/insert.serv", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    @EnableLog(desc = "新建用户")
+    @EnableLog("新建用户")
     public ServiceData insert(HttpServletRequest request,@Valid @RequestBody LovBO entity, BindingResult result) throws Exception
     {
     	logger.debug("--新建用户");

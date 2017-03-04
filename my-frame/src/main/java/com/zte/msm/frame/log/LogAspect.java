@@ -1,28 +1,28 @@
 package com.zte.msm.frame.log;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
+import java.lang.annotation.Annotation;
 
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
-import com.zte.msm.frame.base.BaseBO;
-import com.zte.msm.frame.common.ServiceData;
-import com.zte.msm.frame.util.date.DateUtil;
-import com.zte.msm.frame.util.http.HttpUtil;
-import com.zte.msm.frame.util.json.JacksonUtil;
+import com.zte.msm.frame.base.BaseController;
+import com.zte.msm.frame.base.BaseMapper;
+import com.zte.msm.frame.base.BaseMapperImpl;
+import com.zte.msm.frame.base.BaseService;
+import com.zte.msm.frame.log.access.dao.LogMapperImpl;
+import com.zte.msm.frame.log.access.dao.LogXMapperImpl;
+import com.zte.msm.frame.log.strategy.LogStrategy;
+import com.zte.msm.frame.util.spring.SpringUtil;
 
 /**
  * 日志切面，在需要日志的handler加上EnableLog注解
@@ -34,7 +34,7 @@ import com.zte.msm.frame.util.json.JacksonUtil;
 public class LogAspect {
 	Logger loggerRoot = LoggerFactory.getLogger(LogAspect.class);
 	public LogAspect(){
-		loggerRoot.debug("Log Aspect int...");
+		loggerRoot.debug("--Log Aspect init...");
 	}
 
 	/**
@@ -61,63 +61,25 @@ public class LogAspect {
 	@Around("declareJointPointExpression()")
 	public Object aroundMethod(ProceedingJoinPoint pjd) throws Throwable{
 		loggerRoot.debug("-LogAspect begin work");
-		HttpServletRequest hsr = null;
-		ServiceData resultSD = null;
-		Date startDt = new Date();
-		// 在后台中输出错误异常异常信息，通过log4j输出。
 		Object target = pjd.getTarget();
-		Logger logger = LoggerFactory.getLogger(target.getClass());
-System.out.println(target.getClass().getName());
+		LogStrategy logStrategy = null;
 		
-		//获取对应方法上的注解
-		Signature signature = pjd.getSignature();    
-		MethodSignature methodSignature = (MethodSignature)signature;    
-		Method targetMethod = methodSignature.getMethod();
-		EnableLog enableLog = targetMethod.getAnnotation(EnableLog.class);
-		if(enableLog!=null){
-logger.debug(enableLog.desc());
-		}
-		Object result = null;
-		String methodName = pjd.getSignature().getName();
-		//记录到文件  记录到数据库
-		//记录的内容：用户工号，姓名，日志时间，调用的类和方法，调用说明，异常，调用时间，开始结束时间,输入输出
-		try {
-			//前置通知
-			logger.debug("The method " + methodName + " begins with " + Arrays.asList(pjd.getArgs()));
-			for (Object arg : pjd.getArgs()) {
-				if(arg instanceof BaseBO){
-logger.debug(JacksonUtil.toJson(arg)); //					
-				}
-				if (arg instanceof HttpServletRequest) {
-					hsr = (HttpServletRequest) arg;
-logger.debug(arg.getClass().toString()); //
-logger.debug(HttpUtil.getClientIpAddr(hsr)); //
-logger.debug(HttpUtil.getServerIpAddr(hsr)); //
-logger.debug(HttpUtil.getHeadInfo(hsr));
-logger.debug(hsr.getRequestURL().toString());
-logger.debug(hsr.getRequestURI());
-				}
-			}
-			//执行目标方法
-			result = pjd.proceed();
-			if(hsr!=null && result instanceof ServiceData ){
-				resultSD = (ServiceData)result;
-			}
-			//返回通知
-			logger.debug("The method " + methodName + " ends with " + result);
-logger.debug(JacksonUtil.toJson(result)); //map转json  
-		} catch (Throwable e) {
-			//异常通知
-			logger.debug("The method " + methodName + " occurs exception:" + e);
-			throw e;
-		}
-		//后置通知
-		logger.debug("The method " + methodName + " ends");
-//		logger.debug("userId:{},userName:{},createDate:{},className:{},methodName:{},exceptionCode:{},spendTime:{}",
-//				userId,userName,createDate,className,methodName);
-//		logger.debug("desc:{},exception:{},inputArgs:{},outputArgs:{}");
-		Date endDt = new Date();
-logger.debug(DateUtil.getDiffDate(startDt, endDt));
+		//这是获得某类所有注解的方法：
+		Annotation[] annotations = target.getClass().getAnnotations();
+        for(Annotation annotation : annotations){
+            //判斷當前注解對象是否為自定義注解
+            if(annotation.annotationType() == Controller.class||annotation.annotationType() == ControllerAdvice.class
+            		||target instanceof BaseController){
+                logStrategy = (LogStrategy) SpringUtil.getBean("controllerLogStrategy");
+            }
+            else if(annotation.annotationType() == Service.class||target instanceof BaseService){
+                logStrategy = (LogStrategy) SpringUtil.getBean("serviceLogStrategy");
+            }
+            else if((annotation.annotationType() == Repository.class||target instanceof BaseMapperImpl)){
+            	logStrategy = (LogStrategy) SpringUtil.getBean("mapperLogStrategy");
+            }
+        }
+		Object result = logStrategy.handle(pjd);
 		return result;
 	}
 }

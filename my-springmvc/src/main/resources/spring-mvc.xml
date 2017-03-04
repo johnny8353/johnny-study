@@ -130,5 +130,13 @@
 		<property name="validationMessageSource" ref="messageSource" />
 	</bean> 
 	
+	<!-- 类型转换及数据格式化 -->
+    <!-- <mvc:annotation-driven>该标签可以简化springmvc相关配置，默认情况下，它会创建并注册一个默认的DefaultAnnotationHandlerMapping
+    	和一个AnnotationMethodHandlerAdapter，如果上下文中存在自定义的对应组件bean，spring mvc会自动利用自定义的bean覆盖默认的，
+    	除此之外，<mvc:annotation-driven/>标签还会注册一个默认的ConversionService，即FormattingConversionServiceFactoryBean，
+    	由于要自定义converter，因此要显示定义一个ConversionSerivce覆盖默认的实现。
+     -->
+     <!-- <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/> -->
+	
 	
 </beans>

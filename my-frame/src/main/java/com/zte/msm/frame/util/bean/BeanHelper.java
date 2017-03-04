@@ -1,4 +1,4 @@
-package com.zte.msm.spring.user.common;
+package com.zte.msm.frame.util.bean;
 
 import java.util.ArrayList;
 import java.util.List;

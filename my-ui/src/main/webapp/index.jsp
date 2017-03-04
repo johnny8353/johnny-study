@@ -9,10 +9,6 @@
 <body>
 	HelloWorld!!UI
 	<a href="${pageContext.request.contextPath}/hello">hello</a><br/>
-	
-	<%
-		out.print("aaa");
-		System.out.println("....");
-	%>
+	<a href="html/app/dtdemo/dt.html">dt.html</a><br/>
 </body>
 </html>

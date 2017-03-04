@@ -29,5 +29,5 @@ public @interface EnableLog {
 	/*
 	 * 说明
 	 */
-	String desc() default "无";  
+	String value() default "无";  
 }
