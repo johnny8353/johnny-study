@@ -67,7 +67,7 @@ public class JacksonUtil {
             logger.error(e.getMessage(), e);  
         }  
         return null;  
-    }  
+    }
   
     public static <T> T toCollection(String json, TypeReference<T> typeReference) {  
         try {  

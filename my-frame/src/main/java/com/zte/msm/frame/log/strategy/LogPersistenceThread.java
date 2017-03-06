@@ -1,6 +1,9 @@
 package com.zte.msm.frame.log.strategy;
 
 import org.slf4j.Logger;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.zte.msm.frame.log.LoggerFactory;
 import com.zte.msm.frame.log.access.dao.LogMapper;
 import com.zte.msm.frame.log.access.dao.LogXMapper;
@@ -31,6 +34,7 @@ public class LogPersistenceThread extends Thread{
 
 
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
 	public void run() {
 		try {

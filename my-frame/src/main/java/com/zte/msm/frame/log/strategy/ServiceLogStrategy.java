@@ -1,7 +1,6 @@
 package com.zte.msm.frame.log.strategy;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Date;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -9,10 +8,7 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.zte.msm.frame.log.EnableLog;
 import com.zte.msm.frame.log.LoggerFactory;
@@ -25,14 +21,14 @@ import com.zte.msm.frame.util.date.DateUtil;
 import com.zte.msm.frame.util.exception.ExceptionUtil;
 import com.zte.msm.frame.util.json.JacksonUtil;
 
-@Transactional(propagation = Propagation.REQUIRES_NEW)
+
 @Component("serviceLogStrategy")
 public class ServiceLogStrategy extends LogStrategy {
 	Logger rootLogger = LoggerFactory.getLogger(ServiceLogStrategy.class);
 
-	@Autowired @Qualifier("xLogMapperImpl")
+	@Autowired //@Qualifier("xLogMapperImpl")
 	private LogMapper logMapper;
-	@Autowired @Qualifier("xLogXMapperImpl")
+	@Autowired //@Qualifier("xLogXMapperImpl")
 	private LogXMapper logXMapper;
 
 	public ServiceLogStrategy() {
@@ -55,6 +51,8 @@ public class ServiceLogStrategy extends LogStrategy {
 		try {
 			logXVO.setCreateBy(10209744L);
 			logVO.setCreateBy(10209744L);
+			logVO.setTable(LOG_SERVICE_TABLE_NAME);
+			logXVO.setTable(LOG_SERVICEX_TABLE_NAME);
 			logVO.setBeginTime(DateUtil.dateToString(beginDate));
 			logVO.setStatus(LOG_STATUS_UNKNOW);
 			// 获取linkid

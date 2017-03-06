@@ -90,6 +90,25 @@
 		<property name="removeAbandonedTimeout" value="1800" />
 		<property name="logAbandoned" value="true" />
 	</bean>
+	
+	<bean id="logDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close">
+		<!-- <property name="driverClassName" value="${db3.driver}"/> -->
+		<property name="url" value="${db3.url}" />
+		<property name="username" value="${db3.username}" />
+		<property name="password" value="${db3.password}" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="100" />
+		<property name="maxWait" value="-1" />
+		<property name="maxIdle" value="100" />
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="select 1 from dual" />
+		<property name="validationQueryTimeout" value="1" />
+		<property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="1800" />
+		<property name="logAbandoned" value="true" />
+	</bean>
 
 	<!-- 注解型事务管理器,第一个为缺省事务管理器 -->
 	<tx:annotation-driven />
@@ -141,18 +160,27 @@
 		<property name="dataSource" ref="readOnlyDataSource" />
 		<property name="configLocation" value="classpath:mybatis.xml" />
 	</bean>
+	<bean id="logSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="logDataSource" />
+		<property name="configLocation" value="classpath:mybatis.xml" />
+	</bean>
 
 	<!-- 配置  sqlSession Bean 可以开启日志持久化功能，不配置不开启-->
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="mainSqlSessionFactory" />
 	</bean>
+	<bean id="sqlSession2" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="logSqlSessionFactory" />
+	</bean>
 
-	<!-- scan for mybatis mappers and let them be autowired -->
+	<!-- scan for mybatis mappers and let them be autowired，不要扫描到frame下的log -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.zte.msm.**.access.dao" />
+		<property name="basePackage" value="com.zte.msm.spring.*.access.dao" />
 		<property name="sqlSessionFactoryBeanName" value="mainSqlSessionFactory" />
 	</bean>
-	<!-- <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> <property 
-		name="basePackage" value="com.zte.msm.**.access.dao"/> <property name="sqlSessionFactoryBeanName" 
-		value="readOnlySqlSessionFactory"/> </bean> -->
+	<!-- 由于spring只有有一个org.mybatis.spring.SqlSessionTemplate，所以log采用 MapperScannerConfigurer -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.zte.msm.frame.log.access.dao" />
+		<property name="sqlSessionFactoryBeanName" value="logSqlSessionFactory" />
+	</bean>
 </beans>

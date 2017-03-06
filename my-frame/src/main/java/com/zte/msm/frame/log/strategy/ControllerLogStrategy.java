@@ -12,10 +12,8 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.zte.msm.frame.base.BaseController;
@@ -33,7 +31,6 @@ import com.zte.msm.frame.util.http.HttpUtil;
 import com.zte.msm.frame.util.json.JacksonUtil;
 import com.zte.msm.frame.util.string.StringUtil;
 
-@Transactional(propagation = Propagation.REQUIRES_NEW)
 @Component("controllerLogStrategy")
 public class ControllerLogStrategy extends LogStrategy {
 	protected ServiceData.RetCode SUCCESS = ServiceData.RetCode.Success;
@@ -45,9 +42,9 @@ public class ControllerLogStrategy extends LogStrategy {
 	
 	Logger rootLogger = LoggerFactory.getLogger(ControllerLogStrategy.class);
 
-	@Autowired @Qualifier("xLogMapperImpl")
+	@Autowired //@Qualifier("xLogMapperImpl")
 	private LogMapper logMapper;
-	@Autowired @Qualifier("xLogXMapperImpl")
+	@Autowired //@Qualifier("xLogXMapperImpl")
 	private LogXMapper logXMapper;
 
 	public ControllerLogStrategy() {
@@ -71,6 +68,8 @@ public class ControllerLogStrategy extends LogStrategy {
 		try {
 			logXVO.setCreateBy(10209744L);
 			logVO.setCreateBy(10209744L);
+			logVO.setTable(LOG_CONTROLLER_TABLE_NAME);
+			logXVO.setTable(LOG_CONTROLLERX_TABLE_NAME);
 			logVO.setBeginTime(DateUtil.dateToString(beginDate));
 			logVO.setStatus(LOG_STATUS_UNKNOW);
 			// 获取linkid
@@ -102,6 +101,8 @@ public class ControllerLogStrategy extends LogStrategy {
 					logVO.setRequestUrl(substring(hsr.getRequestURI(), 250));
 					logVO.setRequestFullUrl(substring(hsr.getRequestURL().toString(), 250));
 				}else{
+					//处理BindingResult tojson报错，直接跳过
+					if(arg instanceof BindingResult) break;
 					inputParamsSB.append(JacksonUtil.toJson(arg));
 				}
 			}

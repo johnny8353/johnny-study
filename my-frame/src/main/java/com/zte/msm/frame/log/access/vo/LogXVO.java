@@ -19,6 +19,7 @@ public class LogXVO extends BaseVO{
 
 	private Long modificationNum;
 
+	private String table;
 	private String exception;
 
 	private String inputParams;
@@ -33,6 +34,14 @@ public class LogXVO extends BaseVO{
 	}
 	public Long getId() {
 		return id;
+	}
+
+	public String getTable() {
+		return table;
+	}
+
+	public void setTable(String table) {
+		this.table = table;
 	}
 
 	public void setId(Long id) {

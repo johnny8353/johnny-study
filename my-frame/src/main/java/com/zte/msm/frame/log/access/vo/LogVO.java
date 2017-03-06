@@ -18,6 +18,7 @@ public class LogVO extends BaseVO{
     private Long modificationNum;
 
     private String userId;
+    private String table;
     private String linkId;
 
     private String userName;
@@ -59,7 +60,15 @@ public class LogVO extends BaseVO{
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public String getTable() {
+		return table;
+	}
+
+	public void setTable(String table) {
+		this.table = table;
+	}
+
+	public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 

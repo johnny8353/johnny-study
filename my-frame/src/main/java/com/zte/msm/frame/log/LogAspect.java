@@ -16,11 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import com.zte.msm.frame.base.BaseController;
-import com.zte.msm.frame.base.BaseMapper;
 import com.zte.msm.frame.base.BaseMapperImpl;
 import com.zte.msm.frame.base.BaseService;
-import com.zte.msm.frame.log.access.dao.LogMapperImpl;
-import com.zte.msm.frame.log.access.dao.LogXMapperImpl;
 import com.zte.msm.frame.log.strategy.LogStrategy;
 import com.zte.msm.frame.util.spring.SpringUtil;
 

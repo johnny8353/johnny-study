@@ -22,8 +22,10 @@ CREATE TABLE `log_controller` (
   `client_info` VARCHAR(255) DEFAULT NULL COMMENT '客户端信息',
   `server_info` VARCHAR(255) DEFAULT NULL COMMENT '服务端信息',
   PRIMARY KEY (`id`),
-  INDEX `sys_log_controller_n1_log_desc` (`log_desc`),
-  INDEX `sys_log_controller_n2_log_desc` (`request_url`)
+  INDEX `log_controller_n1_log_desc` (`log_desc`),
+  INDEX `log_controller_n2_log_request_url` (`request_url`),
+  INDEX `log_controller_n3_log_user_name` (`user_name`),
+  INDEX `log_controller_n4_log_link_id` (`link_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `log_controller_x` (
@@ -37,5 +39,10 @@ CREATE TABLE `log_controller_x` (
   `exception` VARCHAR(4000) DEFAULT NULL COMMENT '异常',
   `input_params` VARCHAR(4000) DEFAULT NULL COMMENT '输入参数',
   `output_params` VARCHAR(4000) DEFAULT NULL COMMENT '输出参数',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `log_controller_x_n1_parent_id` (`parent_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+
+
+

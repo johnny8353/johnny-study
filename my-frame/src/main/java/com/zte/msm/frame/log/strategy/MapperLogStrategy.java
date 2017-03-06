@@ -1,49 +1,33 @@
 package com.zte.msm.frame.log.strategy;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.zte.msm.frame.base.BaseBO;
-import com.zte.msm.frame.common.FormData;
-import com.zte.msm.frame.common.ServiceData;
-import com.zte.msm.frame.exception.BusinessException;
-import com.zte.msm.frame.exception.ValidationException;
 import com.zte.msm.frame.log.EnableLog;
 import com.zte.msm.frame.log.LoggerFactory;
 import com.zte.msm.frame.log.access.dao.LogMapper;
-import com.zte.msm.frame.log.access.dao.LogMapperImpl;
 import com.zte.msm.frame.log.access.dao.LogXMapper;
-import com.zte.msm.frame.log.access.dao.LogXMapperImpl;
 import com.zte.msm.frame.log.access.vo.LogVO;
 import com.zte.msm.frame.log.access.vo.LogXVO;
 import com.zte.msm.frame.thread.ThreadLocalMap;
 import com.zte.msm.frame.util.date.DateUtil;
 import com.zte.msm.frame.util.exception.ExceptionUtil;
-import com.zte.msm.frame.util.http.HttpUtil;
 import com.zte.msm.frame.util.json.JacksonUtil;
-import com.zte.msm.frame.util.string.StringUtil;
 
-@Transactional(propagation = Propagation.REQUIRES_NEW)
 @Component("mapperLogStrategy")
 public class MapperLogStrategy extends LogStrategy {
 	Logger rootLogger = LoggerFactory.getLogger(ServiceLogStrategy.class);
 
-	@Autowired @Qualifier("xLogMapperImpl")
+	@Autowired //@Qualifier("xLogMapperImpl")
 	private LogMapper logMapper;
-	@Autowired @Qualifier("xLogXMapperImpl")
+	@Autowired //@Qualifier("xLogXMapperImpl")
 	private LogXMapper logXMapper;
 
 	public MapperLogStrategy() {
@@ -63,13 +47,15 @@ public class MapperLogStrategy extends LogStrategy {
 		String methodName = "";
 		StringBuffer inputSB = new StringBuffer();
 		
-		if(target instanceof LogXMapperImpl || target instanceof LogMapperImpl){//日志类不进行切面，否则死循环
+		if(target instanceof LogMapper || target instanceof LogXMapper){//日志类不进行切面，否则死循环
 			return pjd.proceed();
 		}
 
 		try {
 			logXVO.setCreateBy(10209744L);
 			logVO.setCreateBy(10209744L);
+			logVO.setTable(LOG_MAPPER_TABLE_NAME);
+			logXVO.setTable(LOG_MAPPERX_TABLE_NAME);
 			logVO.setBeginTime(DateUtil.dateToString(beginDate));
 			logVO.setStatus(LOG_STATUS_UNKNOW);
 			// 获取linkid

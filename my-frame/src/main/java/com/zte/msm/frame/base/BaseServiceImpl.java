@@ -9,7 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.zte.msm.frame.common.PageRows;
 import com.zte.msm.frame.log.EnableLog;
-
+/**
+ * 基础Service实现类
+ * @author JohnnyHuang黄福强
+ */
 public class BaseServiceImpl<T> {
 
     /**

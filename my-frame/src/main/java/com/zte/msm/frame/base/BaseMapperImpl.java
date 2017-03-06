@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.zte.msm.frame.log.EnableLog;
 
+/**
+ * 基础Mapper实现类
+ * @author JohnnyHuang黄福强
+ */
 public abstract class BaseMapperImpl<T> implements BaseMapper<T> {
 	@Autowired
 	public SqlSessionTemplate sqlSession;
@@ -16,16 +20,13 @@ public abstract class BaseMapperImpl<T> implements BaseMapper<T> {
 	 * @return
 	 */
 	public abstract String getCanonicalName();
-//	public String getCanonicalName() {
-//		return v.getClass().getCanonicalName();
-//	}
 	@EnableLog("BaseMapper-获取对象列表")
 	@Override
 	public List<T> getList(Map<String, Object> map) {
 		return sqlSession.selectList(getCanonicalName()+".getList", map);
 	}
 
-	@EnableLog("BaseMapper-根据主键单个对象")
+	@EnableLog("BaseMapper-根据主键删除单个对象")
 	@Override
 	public int delete(Long id) {
 		return sqlSession.delete(getCanonicalName()+".delete", id);
@@ -37,7 +38,7 @@ public abstract class BaseMapperImpl<T> implements BaseMapper<T> {
 		return sqlSession.insert(getCanonicalName()+".insert", record);
 
 	}
-	@EnableLog("BaseMapper-获取单个对象")
+	@EnableLog("BaseMapper-根据主键获取单个对象")
 	@Override
 	public T get(Long id) {
 		return (T)sqlSession.selectOne(getCanonicalName()+".get", id);
