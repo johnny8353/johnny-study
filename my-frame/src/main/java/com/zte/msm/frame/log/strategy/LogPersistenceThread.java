@@ -33,7 +33,7 @@ public class LogPersistenceThread extends Thread{
 	}
 
 
-
+	//日志不受外部事物影响，开启新的事务
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
 	public void run() {

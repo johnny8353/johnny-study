@@ -35,7 +35,7 @@ public class UserControllerEasyTest extends BaseTest<UserController>{
 	public void testGet() throws Exception{
 		logger.debug("testGet");
 		UserBO userBO = new UserBO();
-		userBO.setId(100003L);
+//		userBO.setId(100003L);
 		String json = JacksonUtil.toJson(userBO); // 将对象转换成json
 		perform("/user/get.serv",json);
 	}

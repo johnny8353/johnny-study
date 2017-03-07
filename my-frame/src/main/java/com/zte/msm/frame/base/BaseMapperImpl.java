@@ -13,7 +13,7 @@ import com.zte.msm.frame.log.EnableLog;
  * @author JohnnyHuang黄福强
  */
 public abstract class BaseMapperImpl<T> implements BaseMapper<T> {
-	@Autowired
+	@Autowired(required=false)
 	public SqlSessionTemplate sqlSession;
 	/**
 	 * 

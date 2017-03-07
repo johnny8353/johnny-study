@@ -31,6 +31,10 @@ import com.zte.msm.frame.util.http.HttpUtil;
 import com.zte.msm.frame.util.json.JacksonUtil;
 import com.zte.msm.frame.util.string.StringUtil;
 
+/**
+ * 控制层的日志控制
+ * @author JohnnyHuang黄福强
+ */
 @Component("controllerLogStrategy")
 public class ControllerLogStrategy extends LogStrategy {
 	protected ServiceData.RetCode SUCCESS = ServiceData.RetCode.Success;
@@ -127,11 +131,10 @@ public class ControllerLogStrategy extends LogStrategy {
 			logXVO.setException(substring(ExceptionUtil.getExceptionMessage(e), 3800));
 			logVO.setStatus(LOG_STATUS_FAIL);
 
-			// 异常统一在basecontroller处理，aop异常时记录返回值到日志
+			// 异常统一在ExceptionHandler.handler处理
 			if (hsr != null && result == null) {
 				result = com.zte.msm.frame.exception.ExceptionHandler.handler(target, hsr, e);
 			}
-//			throw e;
 		} finally {
 			logXVO.setOutputParams(substring(JacksonUtil.toJson(result), 3800));
 			// 后置通知

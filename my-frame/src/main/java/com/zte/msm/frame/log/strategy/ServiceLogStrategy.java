@@ -21,7 +21,9 @@ import com.zte.msm.frame.util.date.DateUtil;
 import com.zte.msm.frame.util.exception.ExceptionUtil;
 import com.zte.msm.frame.util.json.JacksonUtil;
 
-
+/**
+ * 服务层的日志控制
+ */
 @Component("serviceLogStrategy")
 public class ServiceLogStrategy extends LogStrategy {
 	Logger rootLogger = LoggerFactory.getLogger(ServiceLogStrategy.class);

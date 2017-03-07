@@ -9,7 +9,11 @@ import com.zte.msm.frame.log.access.dao.LogXMapper;
 import com.zte.msm.frame.log.access.vo.LogVO;
 import com.zte.msm.frame.log.access.vo.LogXVO;
 import com.zte.msm.frame.util.spring.SpringUtil;
-
+/**
+ * 日志 策略抽象类，提供 公用的抽象方法
+ * @author JohnnyHuang黄福强
+ *
+ */
 public abstract class LogStrategy {
 	private Logger logger = LoggerFactory.getLogger(LogStrategy.class);
 	public final static String X_LINK_ID = "X_LINK_ID";
@@ -22,7 +26,7 @@ public abstract class LogStrategy {
 	public final static String LOG_SERVICEX_TABLE_NAME = "log_service_x";
 	public final static String LOG_MAPPER_TABLE_NAME = "log_mapper";
 	public final static String LOG_MAPPERX_TABLE_NAME = "log_mapper_x";
-	public final static String LOG_SQL_SESSION = "sqlSession";//IOC配置bean 日志存储数据库
+	public final static String LOG_OPENFLAG_BEAN = "logSqlSessionFactory";//IOC配置bean 日志存储数据库
 
 	public abstract Object handle(ProceedingJoinPoint pjd) throws Throwable;
 
@@ -53,12 +57,12 @@ public abstract class LogStrategy {
 			//没有存在sqlSession bean 跳过拦截
 			Object sqlSession = null;
 			try{
-				sqlSession = SpringUtil.getBean(LOG_SQL_SESSION);
+				sqlSession = SpringUtil.getBean(LOG_OPENFLAG_BEAN);
 			}catch (Exception e) {
-				logger.warn("日志持久化告警：没有存在sqlSession bean 不进行日志持久化");
+				logger.warn("日志持久化提示：没有存在{} bean 不进行日志持久化",LOG_OPENFLAG_BEAN);
 			}
 			if(sqlSession != null){
-				logger.warn("it exists sqlSession bean , doPersistenceAsync.... ");
+				logger.info("日志持久化提示：存在 {} bean , doPersistenceAsync.... ",LOG_OPENFLAG_BEAN);
 				LogPersistenceThread logPersistenceThread = new LogPersistenceThread(logMapper, logXMapper, logVO, logXVO);
 				logPersistenceThread.start();
 			}

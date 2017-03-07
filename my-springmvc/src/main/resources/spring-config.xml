@@ -160,12 +160,12 @@
 		<property name="dataSource" ref="readOnlyDataSource" />
 		<property name="configLocation" value="classpath:mybatis.xml" />
 	</bean>
+	<!-- 配置  logSqlSessionFactory Bean 可以开启日志持久化功能，不配置不开启-->
 	<bean id="logSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="logDataSource" />
 		<property name="configLocation" value="classpath:mybatis.xml" />
 	</bean>
 
-	<!-- 配置  sqlSession Bean 可以开启日志持久化功能，不配置不开启-->
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="mainSqlSessionFactory" />
 	</bean>

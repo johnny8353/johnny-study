@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zte.msm.frame.log.access.dao.LogXMapper">
+  <resultMap id="BaseResultMap" type="com.zte.msm.frame.log.access.vo.LogXVO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="last_upd_date" jdbcType="TIMESTAMP" property="lastUpdDate" />
+    <result column="last_upd_by" jdbcType="BIGINT" property="lastUpdBy" />
+    <result column="modification_num" jdbcType="BIGINT" property="modificationNum" />
+    <result column="exception" jdbcType="VARCHAR" property="exception" />
+    <result column="input_params" jdbcType="VARCHAR" property="inputParams" />
+    <result column="output_params" jdbcType="VARCHAR" property="outputParams" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id,parent_id, create_date, create_by, last_upd_date, last_upd_by, modification_num, exception, 
+    input_params, output_params
+  </sql>
+  <select id="get" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from log_controller_x
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="delete" parameterType="java.lang.Long">
+    delete from log_controller_x
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zte.msm.frame.log.access.vo.LogXVO">
+    insert into ${table} (id,parent_id, create_date, create_by, 
+      last_upd_date, last_upd_by, modification_num, 
+      exception, input_params, output_params
+      )
+    values (#{id,jdbcType=BIGINT},#{parentId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT}, 
+      #{lastUpdDate,jdbcType=TIMESTAMP}, #{lastUpdBy,jdbcType=BIGINT}, #{modificationNum,jdbcType=BIGINT}, 
+      #{exception,jdbcType=VARCHAR}, #{inputParams,jdbcType=VARCHAR}, #{outputParams,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="update" parameterType="com.zte.msm.frame.log.access.vo.LogXVO">
+    update log_controller_x
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="lastUpdDate != null">
+        last_upd_date = #{lastUpdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdBy != null">
+        last_upd_by = #{lastUpdBy,jdbcType=BIGINT},
+      </if>
+      <if test="modificationNum != null">
+        modification_num = #{modificationNum,jdbcType=BIGINT},
+      </if>
+      <if test="exception != null">
+        exception = #{exception,jdbcType=VARCHAR},
+      </if>
+      <if test="inputParams != null">
+        input_params = #{inputParams,jdbcType=VARCHAR},
+      </if>
+      <if test="outputParams != null">
+        output_params = #{outputParams,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zte.msm.frame.log.access.vo.LogXVO">
+    update log_controller_x
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=BIGINT},
+      last_upd_date = #{lastUpdDate,jdbcType=TIMESTAMP},
+      last_upd_by = #{lastUpdBy,jdbcType=BIGINT},
+      modification_num = #{modificationNum,jdbcType=BIGINT},
+      exception = #{exception,jdbcType=VARCHAR},
+      input_params = #{inputParams,jdbcType=VARCHAR},
+      output_params = #{outputParams,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
