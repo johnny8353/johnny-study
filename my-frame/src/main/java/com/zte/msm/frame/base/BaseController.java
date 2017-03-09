@@ -1,9 +1,12 @@
 package com.zte.msm.frame.base;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,12 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.support.RequestContext;
 
 import com.zte.msm.frame.common.ServiceData;
-import com.zte.msm.frame.exception.BusinessException;
-import com.zte.msm.frame.exception.ValidationException;
 import com.zte.msm.frame.log.EnableLog;
 import com.zte.msm.frame.log.LoggerFactory;
 import com.zte.msm.frame.util.json.JacksonUtil;
-import com.zte.msm.frame.util.string.StringUtil;
 
 /**
  * 基础控制类
@@ -51,6 +51,15 @@ public class BaseController {
 	public String getMessage(HttpServletRequest request, String key) {
 		RequestContext requestContext = new RequestContext(request);
 		return messageSource.getMessage(key, null, requestContext.getLocale());
+	}
+	/**
+	 * 获取多语言
+	 * @param key
+	 * @return
+	 */
+	public String getMessage(String key) {
+		Locale locale = LocaleContextHolder.getLocale();//不依赖于request
+		return messageSource.getMessage(key, null, locale);
 	}
 
 	// 异常处理方法

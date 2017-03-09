@@ -138,5 +138,7 @@
      -->
      <!-- <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/> -->
 	
-	
+	<!--静态资源访问 -->
+	<mvc:resources location="/skin/" mapping="/skin/**" /> 
+	<mvc:resources location="/js/" mapping="/js/**" /> 
 </beans>

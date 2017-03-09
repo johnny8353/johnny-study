@@ -3,6 +3,7 @@ package com.zte.msm;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @RestController
 @EnableWebMvc
 @EnableAutoConfiguration
-@ComponentScan("com.zte.msm")
+@EnableAspectJAutoProxy
+@ComponentScan("com.zte.msm.*,springfox.*")
 public class Application// implements EmbeddedServletContainerCustomizer 
 {
 	@RequestMapping("/")
