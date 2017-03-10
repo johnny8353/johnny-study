@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
-import com.zte.msm.frame.i18n.HeaderLocaleResolver;
+//import com.zte.msm.frame.i18n.HeaderLocaleResolver;
 
 /**
  * Created by Administrator on 2017/2/16.
@@ -38,11 +38,11 @@ public class I18NConfig
     @Bean(name = "messageSource")
     public ResourceBundleMessageSource getMessageResource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-////        messageSource.setBasename(baseName); 指定一个文件
-//        messageSource.setBasenames(baseName,baseName2);
-//        messageSource.setDefaultEncoding("UTF-8");//设置编码，否则中文会乱码
-//        messageSource.setUseCodeAsDefaultMessage(true);
-//        messageSource.setCacheSeconds(3600);
+		// messageSource.setBasename(baseName); 指定一个文件
+		messageSource.setBasenames(baseName, baseName2);
+		messageSource.setDefaultEncoding("UTF-8");// 设置编码，否则中文会乱码
+		messageSource.setUseCodeAsDefaultMessage(true);
+		messageSource.setCacheSeconds(3600);
         return messageSource;
     }
 //    @Bean(name = "localeResolver")

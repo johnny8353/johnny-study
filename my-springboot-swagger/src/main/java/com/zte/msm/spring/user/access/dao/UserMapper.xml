@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zte.msm.spring.user.access.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.zte.msm.spring.user.access.vo.UserVO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="enckey" jdbcType="VARCHAR" property="enckey" />
+    <result column="enciv" jdbcType="VARCHAR" property="enciv" />
+    <result column="effective_date" jdbcType="TIMESTAMP" property="effectiveDate" />
+    <result column="expiration_date" jdbcType="TIMESTAMP" property="expirationDate" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="mobile_no" jdbcType="VARCHAR" property="mobileNo" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="last_upd_date" jdbcType="TIMESTAMP" property="lastUpdDate" />
+    <result column="last_upd_by" jdbcType="BIGINT" property="lastUpdBy" />
+    <result column="modification_num" jdbcType="BIGINT" property="modificationNum" />
+    <result column="enable_flag" jdbcType="VARCHAR" property="enableFlag" />
+    <result column="org_id" jdbcType="BIGINT" property="orgId" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, name, account, pwd, token, enckey, enciv, effective_date, expiration_date, email, 
+    mobile_no, create_date, create_by, last_upd_date, last_upd_by, modification_num, 
+    enable_flag, org_id
+  </sql>
+  
+  <select id="getList" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_user where 1=1
+    <if test="id != null"> and ID = #{id}</if>
+    <if test="account != null and account != ''"> and ACCOUNT = #{account}</if>
+
+    <if test="orderField != null">
+      <choose>
+        <when test="orderField=='id'">
+          order by ID
+          <if test="order != null and order == 'desc'"> desc </if>
+        </when>
+        <when test="orderField=='account'">
+          order by ACCOUNT
+          <if test="order != null and order == 'desc'"> desc </if>
+        </when>
+      </choose>
+    </if>
+  </select>
+  
+  <select id="get" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.Long">
+    delete from sys_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="com.zte.msm.spring.user.access.vo.UserVO">
+    insert into sys_user (id, name, account, 
+      pwd, token, enckey, 
+      enciv, effective_date, expiration_date, 
+      email, mobile_no, create_date, 
+      create_by, last_upd_date, last_upd_by, 
+      modification_num, enable_flag, org_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
+      #{pwd,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, #{enckey,jdbcType=VARCHAR}, 
+      #{enciv,jdbcType=VARCHAR}, #{effectiveDate,jdbcType=TIMESTAMP}, #{expirationDate,jdbcType=TIMESTAMP}, 
+      #{email,jdbcType=VARCHAR}, #{mobileNo,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=BIGINT}, #{lastUpdDate,jdbcType=TIMESTAMP}, #{lastUpdBy,jdbcType=BIGINT}, 
+      #{modificationNum,jdbcType=BIGINT}, #{enableFlag,jdbcType=VARCHAR}, #{orgId,jdbcType=BIGINT}
+      )
+  </insert>
+  
+  <update id="update" parameterType="com.zte.msm.spring.user.access.vo.UserVO">
+    update sys_user
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="enckey != null">
+        enckey = #{enckey,jdbcType=VARCHAR},
+      </if>
+      <if test="enciv != null">
+        enciv = #{enciv,jdbcType=VARCHAR},
+      </if>
+      <if test="effectiveDate != null">
+        effective_date = #{effectiveDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expirationDate != null">
+        expiration_date = #{expirationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileNo != null">
+        mobile_no = #{mobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="lastUpdDate != null">
+        last_upd_date = #{lastUpdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdBy != null">
+        last_upd_by = #{lastUpdBy,jdbcType=BIGINT},
+      </if>
+      <if test="modificationNum != null">
+        modification_num = #{modificationNum,jdbcType=BIGINT},
+      </if>
+      <if test="enableFlag != null">
+        enable_flag = #{enableFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <update id="update2" parameterType="com.zte.msm.spring.user.access.vo.UserVO">
+    update sys_user
+    set name = #{name,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      enckey = #{enckey,jdbcType=VARCHAR},
+      enciv = #{enciv,jdbcType=VARCHAR},
+      effective_date = #{effectiveDate,jdbcType=TIMESTAMP},
+      expiration_date = #{expirationDate,jdbcType=TIMESTAMP},
+      email = #{email,jdbcType=VARCHAR},
+      mobile_no = #{mobileNo,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=BIGINT},
+      last_upd_date = #{lastUpdDate,jdbcType=TIMESTAMP},
+      last_upd_by = #{lastUpdBy,jdbcType=BIGINT},
+      modification_num = #{modificationNum,jdbcType=BIGINT},
+      enable_flag = #{enableFlag,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_USER
+    where account = #{account,jdbcType=VARCHAR}
+  </select>
+</mapper>

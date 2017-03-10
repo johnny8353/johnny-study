@@ -9,10 +9,7 @@
 <body>
 	HelloWorld!!
 	<a href="${pageContext.request.contextPath}/hello">hello</a><br/>
+	<a href="${pageContext.request.contextPath}/swagger-ui.html">swagger-ui.html</a><br/>
 	
-	<%
-		out.print("aaa");
-		System.out.println("....");
-	%>
 </body>
 </html>

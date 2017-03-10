@@ -67,6 +67,14 @@
         <servlet-name>dispatcherServlet</servlet-name>
         <url-pattern>*.serv</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <url-pattern>/v2/api-docs</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <url-pattern>/swagger-resources</url-pattern>
+    </servlet-mapping>
 
 
 	<filter>

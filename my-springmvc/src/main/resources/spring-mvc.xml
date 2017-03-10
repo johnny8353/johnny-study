@@ -38,7 +38,7 @@
         -->
     </mvc:annotation-driven>
     
-    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
 	
 	<!-- 把标记了@Controller注解的类转换为bean -->
 	<context:component-scan base-package="com.zte" use-default-filters="false">
@@ -141,4 +141,7 @@
 	<!--静态资源访问 -->
 	<mvc:resources location="/skin/" mapping="/skin/**" /> 
 	<mvc:resources location="/js/" mapping="/js/**" /> 
+	<mvc:resources location="/swagger-ui.html" mapping="/swagger-ui.html" /> 
+	
+	<!-- <mvc:default-servlet-handler/>  -->
 </beans>

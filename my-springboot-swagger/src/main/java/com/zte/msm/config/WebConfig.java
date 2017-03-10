@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.zte.msm.frame.common.HttpCryptoFilter;
+//import com.zte.msm.frame.common.HttpCryptoFilter;
 
 /**
  * 当使用Spring Boot来架设服务系统时，有时候也需要用到前端页面，当然就不可或缺地需要访问其他一些静态资源，比如图片、css、js等文件。
